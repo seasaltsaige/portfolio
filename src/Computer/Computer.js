@@ -67,10 +67,9 @@ class Computer {
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
         opactiy += 0.002;
         // TEMP
-        if (opactiy >= 0.75) {
+        if (opactiy >= 0.1) {
           clearInterval(timer);
           res();
-          this._initFunctions_();
         }
       }, 10);
     });
@@ -91,8 +90,11 @@ class Computer {
           (pos.y <= proj.pos.y + this.icon_data.size)
       });
 
+      const pWindow = new CWindow(icon, ctx, canvas);
       // Add window based on icon clicked
-      this.windows.push();
+      this.windows.push(pWindow);
+      // 
+      pWindow.spawn();
 
     };
 
@@ -202,6 +204,7 @@ class Computer {
       }
 
       this._navbar_();
+      this._initFunctions_();
 
 
       // console.log(data);
