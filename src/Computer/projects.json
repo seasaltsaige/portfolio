@@ -1,0 +1,62 @@
+{
+  "github": "https://github.com",
+  "github_handle": "seasaltsaige",
+  "projects": [
+    {
+      "name": "Kana Practice",
+      "short_description": "",
+      "long_description": "",
+      "url": "{github}/{github_handle}/kana-practice",
+      "image_url": "",
+      "icon_url": "./ProjectImages/Icons/kana.png"
+    },
+    {
+      "name": "Digital Circuit Visualizer",
+      "short_description": "",
+      "long_description": "",
+      "url": "{github}/{github_handle}/digital-circuit-visualizer",
+      "image_url": "",
+      "icon_url": "./ProjectImages/Icons/circuit.png"
+    },
+    {
+      "name": "Conways Game of Life",
+      "short_description": "",
+      "long_description": "",
+      "url": "{github}/{github_handle}/conways-game-of-life",
+      "image_url": "",
+      "icon_url": "./ProjectImages/Icons/conway.png"
+    },
+    {
+      "name": "Console Tetris",
+      "short_description": "",
+      "long_description": "",
+      "url": "{github}/{github_handle}/console-tetris",
+      "image_url": "",
+      "icon_url": "./ProjectImages/Icons/tetris.jpg"
+    },
+    {
+      "name": "Console Tetris",
+      "short_description": "",
+      "long_description": "",
+      "url": "{github}/{github_handle}/console-tetris",
+      "image_url": "",
+      "icon_url": "./ProjectImages/Icons/tetris.jpg"
+    },
+    {
+      "name": "Console Tetris",
+      "short_description": "",
+      "long_description": "",
+      "url": "{github}/{github_handle}/console-tetris",
+      "image_url": "",
+      "icon_url": "./ProjectImages/Icons/tetris.jpg"
+    },
+    {
+      "name": "Console Tetris",
+      "short_description": "",
+      "long_description": "",
+      "url": "{github}/{github_handle}/console-tetris",
+      "image_url": "",
+      "icon_url": "./ProjectImages/Icons/tetris.jpg"
+    }
+  ]
+}
