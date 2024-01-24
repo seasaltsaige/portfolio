@@ -198,7 +198,8 @@ class Computer {
         ctx.fillStyle = "white";
         ctx.fillText(project.name, x + size / 2, y + (size * 1.2));
 
-        await this.sleep(250);
+        // TEMP
+        await this.sleep(20);
         row_i++;
         if (row_i === max_col_len) {
           row_i = 0;
@@ -248,12 +249,24 @@ class Computer {
     const canvas = this.canvas;
     const ctx = this.ctx;
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(0, canvas.height - 73, canvas.width - 3, canvas.height);
+    // ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    // ctx.fillRect(0, canvas.height - 73, canvas.width - 3, canvas.height);
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "black";
     ctx.fillStyle = "#222128";
-    ctx.fillRect(0, canvas.height - 70, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.roundRect(0, canvas.height - 70, canvas.width, canvas.height, [5, 5, 0, 0]);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.shadowBlur = null;
+    ctx.shadowColor = null;
+
     ctx.fillStyle = "#1b1a20";
-    ctx.fillRect(20, canvas.height - 60, 50, 50)
+    ctx.beginPath();
+    ctx.roundRect(20, canvas.height - 60, 50, 50, 5);
+    ctx.closePath();
+    ctx.fill();
 
     const power = new Image();
     power.onload = () => {
