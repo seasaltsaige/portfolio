@@ -18,7 +18,7 @@ class Computer {
   }
 
   /**
-   * @type {[]}
+   * @type {CWindow[]}
    */
   windows = [];
 
@@ -34,6 +34,11 @@ class Computer {
   constructor(ctx, canvas) {
     this.ctx = ctx;
     this.canvas = canvas;
+
+    // Should change based on size of window
+    // TODO: Make this actually make sense cause this is arbitrary atm
+    this.icon_data.size = canvas.width / 25;
+
     this._init_();
   }
 
@@ -90,10 +95,14 @@ class Computer {
           (pos.y <= proj.pos.y + this.icon_data.size)
       });
 
-      const pWindow = new CWindow(icon, ctx, canvas);
+      console.log(this.windows, icon);
+      if (this.windows.find(w => w.project.name === icon.project_data.name) !== undefined)
+        return;
+
+      const pWindow = new CWindow(icon.project_data, ctx, canvas);
       // Add window based on icon clicked
+      // if (this.windows.find())
       this.windows.push(pWindow);
-      // 
       pWindow.spawn();
 
     };
