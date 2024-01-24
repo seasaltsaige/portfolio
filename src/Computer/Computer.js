@@ -18,6 +18,21 @@ class Computer {
   }
 
   /**
+   * @type {{
+   *  mouseDown: boolean;
+   *  mousePos: { x: number; y: number };
+   *  offSetFromWindowOrigin: { x: number; y: number; };
+   *  targetWindow: CWindow | null;
+   * }}
+   */
+  dragData = {
+    mouseDown: false,
+    mousePos: { x: 0, y: 0 },
+    offSetFromWindowOrigin: { x: 0, y: 0 },
+    targetWindow: null,
+  }
+
+  /**
    * @type {CWindow[]}
    */
   windows = [];
@@ -94,29 +109,105 @@ class Computer {
           (pos.y >= proj.pos.y) &&
           (pos.y <= proj.pos.y + this.icon_data.size)
       });
+      if (icon === undefined) return;
 
-      console.log(this.windows, icon);
       if (this.windows.find(w => w.project.name === icon.project_data.name) !== undefined)
         return;
 
       const pWindow = new CWindow(icon.project_data, ctx, canvas);
-      // Add window based on icon clicked
-      // if (this.windows.find())
+
       this.windows.push(pWindow);
       pWindow.spawn();
 
     };
 
-    canvas.ondragstart = (ev) => {
+    canvas.onclick = (ev) => {
+      const mouseType = this._mouseType_();
 
-    }
-    canvas.ondrag = (ev) => {
-
-    }
-    canvas.ondragend = (ev) => {
+      if (mouseType !== "Left") return;
 
     }
 
+    canvas.onmousedown = (ev) => {
+      const mouseType = this._mouseType_(ev);
+      if (mouseType !== "Left") return;
+      this.dragData.mouseDown = true;
+
+      const mousePos = this._mousePos_(ev);
+      this.windows.forEach((w) => w.unfocus());
+
+      const generalFocusFilter = this.windows.filter((window) => (
+        (mousePos.x >= window.position.x && mousePos.x <= window.position.x + window.size.width) &&
+        (mousePos.y >= window.position.y && mousePos.y <= window.position.y + window.size.height)
+      ));
+
+      if (generalFocusFilter.length < 1) return;
+
+      const last = generalFocusFilter[generalFocusFilter.length - 1];
+      const ind = this.windows.findIndex((wind) => wind.project.name === last.project.name);
+      const reorder = this.windows.splice(ind, 1)[0];
+      this.windows.push(reorder);
+      reorder.focus();
+
+      this._render_();
+
+      const possibleWindows = this.windows.filter((window) => (
+        (mousePos.x >= window.position.x && mousePos.x <= window.position.x + window.size.width) &&
+        (mousePos.y >= window.position.y && mousePos.y <= window.position.y + window.headerHeight)
+      ));
+
+      if (possibleWindows.length < 1) return;
+
+
+      const twin = possibleWindows[possibleWindows.length - 1];
+      const index = this.windows.findIndex((wind) => wind.project.name === twin.project.name);
+      const pwindow = this.windows.splice(index, 1)[0];
+      this.windows.push(pwindow);
+      this.dragData.targetWindow = pwindow;
+      pwindow.focus();
+
+      this.dragData.offSetFromWindowOrigin = { x: mousePos.x - pwindow.position.x, y: mousePos.y - pwindow.position.y };
+
+      this._render_();
+    }
+
+    canvas.onmousemove = (ev) => {
+      const mouseType = this._mouseType_(ev);
+      if (mouseType !== "Left") return;
+      if (!this.dragData.mouseDown) return;
+
+      const mousePos = this._mousePos_(ev);
+
+      const window = this.dragData.targetWindow;
+
+      window.position = {
+        x: mousePos.x - this.dragData.offSetFromWindowOrigin.x,
+        y: mousePos.y - this.dragData.offSetFromWindowOrigin.y,
+      }
+
+      this._render_();
+    }
+
+    canvas.onmouseup = (ev) => {
+      const mouseType = this._mouseType_(ev);
+      if (mouseType !== "Left") return;
+
+      this.dragData.mouseDown = false;
+      // this.dragData.mousePos = { x: 0, y: 0 };
+      this.dragData.offSetFromWindowOrigin = { x: 0, y: 0 };
+      this.dragData.targetWindow = null;
+
+    }
+
+  }
+
+  /**
+   * @private
+   * @param {MouseEvent} ev 
+   * @returns 
+   */
+  _mouseType_(ev) {
+    return ev.button === 0 ? "Left" : ev.button === 1 ? "Middle" : ev.button === 2 ? "Right" : null;
   }
 
   /**
@@ -190,7 +281,6 @@ class Computer {
           image.src = project.icon_url;
         }
 
-
         ctx.textAlign = "center";
         ctx.font = "normal 12px arial";
         ctx.fillStyle = "black";
@@ -205,19 +295,10 @@ class Computer {
           row_i = 0;
           col_i++;
         }
-
-
-        // const x = (i % projPerCol - projPerCol / 2 + 0.5) * spacing;
-        // const y = (Math.floor(i / projPerCol) - projPerRow / 2 + 0.5) * spacing;
-
-        // ctx.fillRect(start_x + x, start_y + y, size, size);
       }
 
       this._navbar_();
       this._initFunctions_();
-
-
-      // console.log(data);
     })
   }
 
@@ -238,7 +319,52 @@ class Computer {
     ctx.fillStyle = "#2B2A33";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // const github = data.github;
+    // const github_handle = data.github_handle;
+    const projects = this.icons;
+
+    ctx.fillStyle = "white";
+
+    const { max_col_len, max_row_len, size, spacing, start_x, start_y } = this.icon_data;
+
+    let row_i = 0;
+    let col_i = 0;
+    for (let i = 0; i < projects.length; i++) {
+      const project = projects[i];
+      const x = start_x + (size * col_i) + (size * col_i) / 1.5;
+      const y = start_y + (size * row_i) + (size * row_i) / 1.5;
+
+      ctx.fillRect(x, y, size, size);
+      if (project.project_data.icon_url !== "") {
+        const image = new Image();
+        image.onload = () => {
+          ctx.drawImage(image, x, y, size, size);
+        }
+        image.src = project.project_data.icon_url;
+      }
+
+
+      ctx.textAlign = "center";
+      ctx.font = "normal 12px arial";
+      ctx.fillStyle = "black";
+      ctx.fillText(project.project_data.name, x + size / 2 + 1, y + (size * 1.2) + 1);
+      ctx.fillStyle = "white";
+      ctx.fillText(project.project_data.name, x + size / 2, y + (size * 1.2));
+
+      row_i++;
+      if (row_i === max_col_len) {
+        row_i = 0;
+        col_i++;
+      }
+
+    }
+
     this._navbar_();
+    for (const window of this.windows) {
+      window.renderWindow();
+    }
+
+
   }
 
   /**
@@ -249,8 +375,6 @@ class Computer {
     const canvas = this.canvas;
     const ctx = this.ctx;
 
-    // ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    // ctx.fillRect(0, canvas.height - 73, canvas.width - 3, canvas.height);
     ctx.shadowBlur = 20;
     ctx.shadowColor = "black";
     ctx.fillStyle = "#222128";
@@ -275,11 +399,5 @@ class Computer {
     power.src = "./ProjectImages/power.png";
 
   }
-
-  // _main_() {
-
-  // }
-
-
 
 }
