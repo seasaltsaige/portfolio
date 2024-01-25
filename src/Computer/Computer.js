@@ -122,9 +122,24 @@ class Computer {
     };
 
     canvas.onclick = (ev) => {
-      const mouseType = this._mouseType_();
-
+      const mouseType = this._mouseType_(ev);
       if (mouseType !== "Left") return;
+
+      const mousePos = this._mousePos_(ev);
+
+      this.windows.forEach(w => w.unfocus());
+
+      const possibleWindows = this.windows.filter((w) =>
+        (mousePos.x >= (w.position.x + w.size.width - w.headerHeight * 2 / 3) && mousePos.x <= (w.position.x + w.size.width - w.headerHeight / 3)) &&
+        (mousePos.y <= (w.position.y + w.headerHeight * 2 / 3) && mousePos.y >= (w.position.y + w.headerHeight / 3))
+      );
+      if (possibleWindows.length < 1) return;
+
+      const windToRemove = possibleWindows.pop();
+
+      const indx = this.windows.findIndex(wind => wind.project.name === windToRemove.project.name);
+      this.windows.splice(indx, 1);
+      this._render_();
 
     }
 

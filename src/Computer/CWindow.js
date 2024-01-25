@@ -227,7 +227,7 @@ class CWindow {
     ctx.stroke();
 
     ctx.strokeStyle = "rgb(30, 30, 30)";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(1 + this.position.x, this.position.y + this.headerHeight);
     ctx.lineTo(-1 + this.position.x, this.position.y + this.headerHeight);
