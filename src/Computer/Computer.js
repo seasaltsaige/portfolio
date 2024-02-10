@@ -121,11 +121,17 @@ class Computer {
 
     };
 
+
+
     canvas.onclick = (ev) => {
       const mouseType = this._mouseType_(ev);
+      const mousePos = this._mousePos_(ev);
+
+      this.windows.forEach(win => win.onclick(mouseType, mousePos))
+
       if (mouseType !== "Left") return;
 
-      const mousePos = this._mousePos_(ev);
+
 
       this.windows.forEach(w => w.unfocus());
 

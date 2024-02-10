@@ -35,28 +35,20 @@
       "icon_url": "./ProjectImages/Icons/tetris.jpg"
     },
     {
-      "name": "Console Tetris",
+      "name": "Tergum",
       "short_description": "",
       "long_description": "",
-      "url": "{github}/{github_handle}/console-tetris",
+      "url": "{github}/{github_handle}/Tergum",
       "image_url": "",
-      "icon_url": "./ProjectImages/Icons/tetris.jpg"
+      "icon_url": ""
     },
     {
-      "name": "Console Tetris",
+      "name": "Discord UNO",
       "short_description": "",
       "long_description": "",
-      "url": "{github}/{github_handle}/console-tetris",
+      "url": "{github}/{github_handle}/discord-uno",
       "image_url": "",
-      "icon_url": "./ProjectImages/Icons/tetris.jpg"
-    },
-    {
-      "name": "Console Tetris",
-      "short_description": "",
-      "long_description": "",
-      "url": "{github}/{github_handle}/console-tetris",
-      "image_url": "",
-      "icon_url": "./ProjectImages/Icons/tetris.jpg"
+      "icon_url": ""
     }
   ]
 }
